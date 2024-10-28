@@ -1,3 +1,5 @@
-import { IQuestion, Question } from './Question.js';
+import type { IQuestion } from './Question.js';
+import { Question } from './Question.js';
 
-export { IQuestion, Question };
+export type { IQuestion };
+export { Question };
