@@ -4,12 +4,12 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000, // Change the Vite dev server port to 3000 to avoid conflicts
+    port: 3000, // Set your frontend to run on port 3000
     proxy: {
       "/api": {
-        target: "http://localhost:3001", // The backend server should be on 3001
-        secure: false,
+        target: "http://localhost:3001", // Server running on 3001
         changeOrigin: true,
+        secure: false,
       },
     },
   },
