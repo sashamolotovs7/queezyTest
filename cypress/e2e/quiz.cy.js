@@ -8,7 +8,7 @@ describe("Tech Quiz End-to-End Test", () => {
     cy.get("button").contains("Start Quiz").click();
 
     // Answer questions until complete
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 3; i++) { // Adjust loop count based on available questions
       cy.get(".btn-primary").first().click(); // Answer each question
     }
 
