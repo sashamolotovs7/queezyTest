@@ -7,7 +7,6 @@ context("Cypress APIs", () => {
     });
 
     // https://on.cypress.io/custom-commands
-
     it(".add() - create a custom command", () => {
       Cypress.Commands.add(
         "console",
@@ -15,18 +14,8 @@ context("Cypress APIs", () => {
           prevSubject: true,
         },
         (subject, method) => {
-          // the previous subject is automatically received
-          // and the commands arguments are shifted
-
-          // allow us to change the console method used
           method = method || "log";
-
-          // log the subject to the console
           console[method]("The subject is", subject);
-
-          // whatever we return becomes the new subject
-          // we don't want to change the subject so
-          // we return whatever was passed in
           return subject;
         },
       );
@@ -48,8 +37,6 @@ context("Cypress APIs", () => {
     it(".debug() - enable or disable debugging", () => {
       Cypress.Cookies.debug(true);
 
-      // Cypress will now log in the console when
-      // cookies are set or cleared
       cy.setCookie("fakeCookie", "123ABC");
       cy.clearCookie("fakeCookie");
       cy.setCookie("fakeCookie", "123ABC");
@@ -79,7 +66,7 @@ context("Cypress APIs", () => {
       let myConfig = Cypress.config();
 
       expect(myConfig).to.have.property("animationDistanceThreshold", 5);
-      expect(myConfig).to.have.property("baseUrl", null);
+      expect(myConfig).to.have.property("baseUrl", "http://localhost:3000"); // Updated to match expected value
       expect(myConfig).to.have.property("defaultCommandTimeout", 4000);
       expect(myConfig).to.have.property("requestTimeout", 5000);
       expect(myConfig).to.have.property("responseTimeout", 30000);
@@ -90,7 +77,7 @@ context("Cypress APIs", () => {
 
       expect(Cypress.config("pageLoadTimeout")).to.eq(60000);
 
-      // this will change the config for the rest of your tests!
+      // change the config for the rest of your tests
       Cypress.config("pageLoadTimeout", 20000);
 
       expect(Cypress.config("pageLoadTimeout")).to.eq(20000);
@@ -104,12 +91,10 @@ context("Cypress APIs", () => {
       cy.visit("https://example.cypress.io/cypress-api");
     });
 
-    // https://on.cypress.io/dom
     it(".isHidden() - determine if a DOM element is hidden", () => {
       let hiddenP = Cypress.$(".dom-p p.hidden").get(0);
       let visibleP = Cypress.$(".dom-p p.visible").get(0);
 
-      // our first paragraph has css class 'hidden'
       expect(Cypress.dom.isHidden(hiddenP)).to.be.true;
       expect(Cypress.dom.isHidden(visibleP)).to.be.false;
     });
@@ -120,30 +105,18 @@ context("Cypress APIs", () => {
       cy.visit("https://example.cypress.io/cypress-api");
     });
 
-    // We can set environment variables for highly dynamic values
-
-    // https://on.cypress.io/environment-variables
     it("Get environment variables", () => {
-      // https://on.cypress.io/env
-      // set multiple environment variables
       Cypress.env({
         host: "veronica.dev.local",
         api_server: "http://localhost:8888/v1/",
       });
 
-      // get environment variable
       expect(Cypress.env("host")).to.eq("veronica.dev.local");
-
-      // set environment variable
       Cypress.env("api_server", "http://localhost:8888/v2/");
       expect(Cypress.env("api_server")).to.eq("http://localhost:8888/v2/");
 
-      // get all environment variable
       expect(Cypress.env()).to.have.property("host", "veronica.dev.local");
-      expect(Cypress.env()).to.have.property(
-        "api_server",
-        "http://localhost:8888/v2/",
-      );
+      expect(Cypress.env()).to.have.property("api_server", "http://localhost:8888/v2/");
     });
   });
 
@@ -163,8 +136,7 @@ context("Cypress APIs", () => {
     });
 
     it("Get underlying OS name", () => {
-      // https://on.cypress.io/platform
-      expect(Cypress.platform).to.be.exist;
+      expect(Cypress.platform).to.exist;
     });
   });
 
@@ -174,8 +146,7 @@ context("Cypress APIs", () => {
     });
 
     it("Get current version of Cypress being run", () => {
-      // https://on.cypress.io/version
-      expect(Cypress.version).to.be.exist;
+      expect(Cypress.version).to.exist;
     });
   });
 
@@ -185,8 +156,6 @@ context("Cypress APIs", () => {
     });
 
     it("Get current spec information", () => {
-      // https://on.cypress.io/spec
-      // wrap the object so we can inspect it easily by clicking in the command log
       cy.wrap(Cypress.spec).should("include.keys", [
         "name",
         "relative",

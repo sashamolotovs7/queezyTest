@@ -15,7 +15,7 @@
     "seed": "cd server && npm run seed",
     "render-build": "npm install && npm run build",
     "cypress:open": "cypress open",
-    "test": "cypress run"
+    "test": "concurrently \"npm run start:dev\" \"wait-on http://localhost:3000 && cypress run\""
   },
   "keywords": [],
   "author": "",

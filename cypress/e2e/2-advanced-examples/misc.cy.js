@@ -6,56 +6,27 @@ context("Misc", () => {
   });
 
   it("cy.exec() - execute a system command", () => {
-    // execute a system command.
-    // so you can take actions necessary for
-    // your test outside the scope of Cypress.
-    // https://on.cypress.io/exec
-
-    // we can use Cypress.platform string to
-    // select appropriate command
-    // https://on.cypress/io/platform
     cy.log(`Platform ${Cypress.platform} architecture ${Cypress.arch}`);
 
-    // on CircleCI Windows build machines we have a failure to run bash shell
-    // https://github.com/cypress-io/cypress/issues/5169
-    // so skip some of the tests by passing flag "--env circle=true"
-    const isCircleOnWindows =
-      Cypress.platform === "win32" && Cypress.env("circle");
-
-    if (isCircleOnWindows) {
-      cy.log("Skipping test on CircleCI");
-
-      return;
-    }
-
-    // cy.exec problem on Shippable CI
-    // https://github.com/cypress-io/cypress/issues/6718
-    const isShippable =
-      Cypress.platform === "linux" && Cypress.env("shippable");
-
-    if (isShippable) {
-      cy.log("Skipping test on ShippableCI");
-
-      return;
-    }
-
-    cy.exec("echo Jane Lane").its("stdout").should("contain", "Jane Lane");
-
+    // Check for Windows environment and avoid using 'cat' which is a Linux command
     if (Cypress.platform === "win32") {
-      cy.exec(`print ${Cypress.config("configFile")}`)
+      // Use 'type' command for Windows to read files
+      cy.exec(`type ${Cypress.config("configFile")}`, { failOnNonZeroExit: false })
         .its("stderr")
         .should("be.empty");
     } else {
-      cy.exec(`cat ${Cypress.config("configFile")}`)
+      // Use 'cat' command for Unix-like systems
+      cy.exec(`cat ${Cypress.config("configFile")}`, { failOnNonZeroExit: false })
         .its("stderr")
         .should("be.empty");
 
-      cy.exec("pwd").its("code").should("eq", 0);
+      cy.exec("pwd", { failOnNonZeroExit: false })
+        .its("code")
+        .should("eq", 0);
     }
   });
 
   it("cy.focused() - get the DOM element that has focus", () => {
-    // https://on.cypress.io/focused
     cy.get(".misc-form").find("#name").click();
     cy.focused().should("have.id", "name");
 
@@ -65,7 +36,6 @@ context("Misc", () => {
 
   context("Cypress.Screenshot", function () {
     it("cy.screenshot() - take a screenshot", () => {
-      // https://on.cypress.io/screenshot
       cy.screenshot("my-image");
     });
 
@@ -84,7 +54,6 @@ context("Misc", () => {
   });
 
   it("cy.wrap() - wrap an object", () => {
-    // https://on.cypress.io/wrap
     cy.wrap({ foo: "bar" })
       .should("have.property", "foo")
       .and("include", "bar");

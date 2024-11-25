@@ -8,27 +8,29 @@ const Quiz = () => {
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  // Fetch random questions from the API
+  // New useEffect to help Cypress find the quiz state updates.
+  useEffect(() => {
+    console.log('Quiz started:', quizStarted);
+    console.log('Quiz completed:', quizCompleted);
+    console.log('Current Question Index:', currentQuestionIndex);
+  }, [quizStarted, quizCompleted, currentQuestionIndex]);
+
   const getRandomQuestions = async () => {
-    setLoading(true);
     try {
       const questions = await getQuestions();
 
-      if (!questions || questions.length === 0) {
-        throw new Error('Failed to fetch questions or no questions available!');
+      if (!questions) {
+        throw new Error('Failed to fetch questions!');
       }
 
+      console.log('Questions fetched:', questions); // Added for debugging
       setQuestions(questions);
     } catch (err) {
-      console.error('Error fetching questions:', err);
-    } finally {
-      setLoading(false);
+      console.error(err);
     }
   };
 
-  // Function to handle when an answer is clicked
   const handleAnswerClick = (isCorrect: boolean) => {
     if (isCorrect) {
       setScore((prevScore) => prevScore + 1);
@@ -42,7 +44,6 @@ const Quiz = () => {
     }
   };
 
-  // Function to start the quiz
   const handleStartQuiz = async () => {
     await getRandomQuestions();
     setQuizStarted(true);
@@ -51,7 +52,6 @@ const Quiz = () => {
     setCurrentQuestionIndex(0);
   };
 
-  // Render the start button if the quiz has not started yet
   if (!quizStarted) {
     return (
       <div className="p-4 text-center">
@@ -62,7 +62,6 @@ const Quiz = () => {
     );
   }
 
-  // Render the completion screen if the quiz has been completed
   if (quizCompleted) {
     return (
       <div className="card p-4 text-center">
@@ -77,8 +76,7 @@ const Quiz = () => {
     );
   }
 
-  // Render a loading spinner while the questions are being fetched
-  if (loading || questions.length === 0) {
+  if (questions.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -88,17 +86,20 @@ const Quiz = () => {
     );
   }
 
-  // Get the current question to display
   const currentQuestion = questions[currentQuestionIndex];
 
-  // Render the current question and answer options
   return (
-    <div className='card p-4'>
+    <div className="card p-4">
       <h2>{currentQuestion.question}</h2>
       <div className="mt-3">
         {currentQuestion.answers.map((answer, index) => (
           <div key={index} className="d-flex align-items-center mb-2">
-            <button className="btn btn-primary" onClick={() => handleAnswerClick(answer.isCorrect)}>{index + 1}</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleAnswerClick(answer.isCorrect)}
+            >
+              {index + 1}
+            </button>
             <div className="alert alert-secondary mb-0 ms-2 flex-grow-1">{answer.text}</div>
           </div>
         ))}

@@ -1,15 +1,16 @@
 {
-    "compilerOptions": {
-      "composite": true,
-      "target": "ES2020",
-      "module": "CommonJS",
-      "strict": true,
-      "skipLibCheck": true,
-      "moduleResolution": "Node",
-      "resolveJsonModule": true,
-      "noEmit": true
-    },
-    "include": ["**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules"]
-  }
-  
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "types": ["cypress"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

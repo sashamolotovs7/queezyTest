@@ -16,15 +16,19 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "."
   },
-  "include": ["client/src", "server/src", "**/*.json"],
+  "include": ["client/src", "server/src", "cypress", "**/*.json"],
   "references": [
     {
       "path": "./client/tsconfig.json"
     },
     {
       "path": "./server/tsconfig.json"
+    },
+    {
+      "path": "./cypress/tsconfig.json"
     }
   ]
 }
